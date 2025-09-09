@@ -1,0 +1,353 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Complaint Management System - Way to Success College, Coimbatore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#f6f6f9; }
+    header { background:#253e72; color:#fff; padding:20px; text-align:center; }
+    nav { background:#eee; display:flex; justify-content:space-around; padding:10px; font-weight:bold; }
+    nav a { text-decoration:none; color:#253e72; padding:0 10px; }
+    .container { max-width:480px; margin:30px auto; background:#fff; box-shadow:0 2px 12px #ccc; padding:28px; border-radius:12px; }
+    h2 { color:#253e72; margin-bottom:14px; }
+    label { display:block; margin:6px 0 2px; }
+    input, select, textarea { width:100%; padding:8px 10px; margin-bottom:12px; border-radius:5px; border:1px solid #ccc; }
+    button { background:#253e72; color:#fff; border:none; padding:10px 30px; font-weight:bold; border-radius:6px; cursor:pointer; }
+    button:disabled { background:#ccc; }
+    .hidden { display:none; }
+    .message { background:#e0ffe0; border:1px solid #74c974; color:#276033; padding:8px; margin-bottom:14px; }
+    .error { background:#ffe0e0; border:1px solid #e99; color:#a94747; padding:8px; margin-bottom:14px; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:1px solid #ddd; padding:6px; }
+    th { background:#bebede; }
+    td.status { font-weight:bold; }
+    .flex { display:flex; gap:8px; }
+    img { max-width:120px; }
+    @media (max-width: 600px){
+      .container{ padding:10px; }
+      th, td { padding:2px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Complaint Management System</h1>
+    <div>Way to Success College, Coimbatore</div>
+  </header>
+  <nav>
+    <a href="#" id="homeTab">Home</a>
+    <a href="#" id="studentTab">Student Registration</a>
+    <a href="#" id="loginTab">User Login</a>
+    <a href="#" id="adminLoginTab">Admin Login</a>
+  </nav>
+  <div class="container">
+    <!-- Home Page -->
+    <div id="homePage">
+      <h2>Welcome!</h2>
+      <p>This platform allows Way to Success College students to submit complaints, track their status, and for administrators to update resolutions.</p>
+    </div>
+    <!-- Student Registration -->
+    <div id="studentPage" class="hidden">
+      <h2>Student Registration</h2>
+      <form id="studentForm" autocomplete="off">
+        <label>Name</label>
+        <input type="text" required id="regName" autocomplete="off" />
+        <label>Class</label>
+        <input type="text" required id="regClass" autocomplete="off" />
+        <label>Age</label>
+        <input type="number" min="15" max="99" required id="regAge" autocomplete="off" />
+        <label>Roll Number</label>
+        <input type="text" required id="regRoll" autocomplete="off" />
+        <label>Mobile Number</label>
+        <input type="tel" required id="regMobile" pattern="[6-9]{1}[0-9]{9}" maxlength="10" title="Enter 10-digit mobile number starting with 6,7,8, or 9" autocomplete="off" />
+        <label>Gmail</label>
+        <input type="email" required id="regGmail" autocomplete="off" />
+        <label>User ID</label>
+        <input type="text" required id="regUserID" autocomplete="off" />
+        <label>Password (4 digits)</label>
+        <input type="password" pattern="\d{4}" maxlength="4" required id="regPassword" autocomplete="off" />
+        <button type="submit">Register</button>
+        <div id="regMsg"></div>
+      </form>
+    </div>
+    <!-- User Login -->
+    <div id="loginPage" class="hidden">
+      <h2>User Login</h2>
+      <form id="loginForm" autocomplete="off">
+        <label>User ID</label>
+        <input type="text" required id="loginUserID" autocomplete="off" />
+        <label>Password</label>
+        <input type="password" required id="loginPassword" autocomplete="off" />
+        <button type="submit">Login</button>
+        <div id="loginMsg"></div>
+      </form>
+    </div>
+    <!-- Complaint Dashboard -->
+    <div id="userDashboard" class="hidden">
+      <div class="flex">
+        <h2 style="flex:1">Student Dashboard</h2>
+        <button id="logoutBtn" style="background:#e99191;">Logout</button>
+      </div>
+      <h3>Add New Complaint</h3>
+      <form id="complaintForm">
+        <label>Location</label>
+        <input type="text" required id="compLocation" />
+        <label>Description</label>
+        <textarea required id="compDesc"></textarea>
+        <label>Upload Photo</label>
+        <input type="file" accept="image/*" id="compPhoto" />
+        <button type="submit">Submit Complaint</button>
+        <div id="compMsg"></div>
+      </form>
+      <h3>Your Complaints</h3>
+      <table id="complaintsTable">
+        <thead>
+          <tr>
+            <th>Complaint ID</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Photo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <!-- Admin Login Page -->
+    <div id="adminLoginPage" class="hidden">
+      <h2>Admin Login</h2>
+      <form id="adminLoginForm" autocomplete="off">
+        <label>Admin User ID</label>
+        <input type="text" required id="adminUserID" autocomplete="off" />
+        <label>Password</label>
+        <input type="password" required id="adminPassword" autocomplete="off" placeholder="Enter password" />
+        <button type="submit">Login</button>
+        <div id="adminLoginMsg"></div>
+      </form>
+    </div>
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="hidden">
+      <div class="flex">
+        <h2 style="flex:1">Admin Panel</h2>
+        <button id="adminLogoutBtn" style="background:#e99191;">Logout</button>
+      </div>
+      <div id="adminSummary"></div>
+      <table id="adminComplaintsTable">
+        <thead>
+          <tr>
+            <th>Complaint ID</th>
+            <th>Name</th>
+            <th>Roll No.</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Set Status</th>
+            <th>Photo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="adminMsg"></div>
+    </div>
+  </div>
+  <script>
+    // Utility functions for localStorage with JSON
+    function getUsers() { return JSON.parse(localStorage.getItem('users') || '[]'); }
+    function setUsers(users) { localStorage.setItem('users', JSON.stringify(users)); }
+    function getComplaints() { return JSON.parse(localStorage.getItem('complaints') || '[]'); }
+    function setComplaints(c) { localStorage.setItem('complaints', JSON.stringify(c)); }
+
+    // UI navigation
+    function show(page) {
+      document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+      document.getElementById(page).classList.remove('hidden');
+    }
+    document.getElementById('homeTab').onclick = () => show('homePage');
+    document.getElementById('studentTab').onclick = () => show('studentPage');
+    document.getElementById('loginTab').onclick = () => show('loginPage');
+    document.getElementById('adminLoginTab').onclick = () => show('adminLoginPage');
+
+    // Registration logic
+    document.getElementById('studentForm').onsubmit = function (e) {
+      e.preventDefault();
+      let msg = document.getElementById('regMsg');
+      const name = document.getElementById('regName').value.trim();
+      const class_ = document.getElementById('regClass').value.trim();
+      const age = parseInt(document.getElementById('regAge').value);
+      const roll = document.getElementById('regRoll').value.trim();
+      const mobile = document.getElementById('regMobile').value.trim();
+      const gmail = document.getElementById('regGmail').value.trim();
+      const userid = document.getElementById('regUserID').value.trim();
+      const pass = document.getElementById('regPassword').value;
+      // Validate mobile with JS in case browser's native validation is spotty
+      if (!/^[6-9]{1}[0-9]{9}$/.test(mobile)) {
+        msg.innerHTML = "<div class='error'>Enter 10-digit Indian mobile number starting with 6/7/8/9.</div>";
+        return;
+      }
+      if (!/^\d{4}$/.test(pass)) {
+        msg.innerHTML = "<div class='error'>Password must be exactly 4 digits.</div>";
+        return;
+      }
+      let users = getUsers();
+      if (users.find(u => u.userid === userid)) {
+        msg.innerHTML = "<div class='error'>User ID already exists.</div>";
+        return;
+      }
+      users.push({ name, class: class_, age, mobile, gmail, userid, password: pass, role: 'student', roll });
+      setUsers(users);
+      msg.innerHTML = "<div class='message'>Registered Successfully! Please login.</div>";
+      this.reset();
+    };
+
+    // Login logic for student
+    let currentUser = null;
+    document.getElementById('loginForm').onsubmit = function (e) {
+      e.preventDefault();
+      let msg = document.getElementById('loginMsg');
+      const userid = document.getElementById('loginUserID').value.trim();
+      const pass = document.getElementById('loginPassword').value;
+      let users = getUsers();
+      let user = users.find(u => u.userid === userid && u.password === pass);
+      if (!user) {
+        msg.innerHTML = "<div class='error'>Invalid credentials.</div>";
+        return;
+      }
+      currentUser = user; // Save logged in student user
+      renderUserDashboard();
+      show('userDashboard');
+      msg.innerHTML = "";
+      this.reset();
+    };
+    document.getElementById('logoutBtn').onclick = () => {
+      currentUser = null;
+      show('homePage');
+    };
+
+    // Complaint submission
+    document.getElementById('complaintForm').onsubmit = function (e) {
+      e.preventDefault();
+      let msg = document.getElementById('compMsg');
+      if (!currentUser) { msg.innerHTML = "<div class='error'>Not logged in.</div>"; return; }
+      const location = document.getElementById('compLocation').value.trim();
+      const desc = document.getElementById('compDesc').value.trim();
+      const photoInput = document.getElementById('compPhoto');
+      const roll = currentUser.roll || currentUser.userid;
+      const name = currentUser.name;
+      function addComplaint(photoData) {
+        let complaints = getComplaints();
+        let compId = "CMP" + (complaints.length + 1001);
+        complaints.push({
+          id: compId, name, roll, location, desc, photo: photoData || "",
+          status: "submitted",
+          history: [{ status: 'submitted', date: new Date().toLocaleString() }]
+        });
+        setComplaints(complaints);
+        msg.innerHTML = "<div class='message'>Complaint Submitted!</div>";
+        document.getElementById('complaintForm').reset();
+        renderUserDashboard();
+      }
+      if (photoInput.files && photoInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function () { addComplaint(reader.result); };
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        addComplaint("");
+      }
+    };
+
+    // Render user complaints/status table
+    function renderUserDashboard() {
+      if (!currentUser) return;
+      let tableBody = document.querySelector('#complaintsTable tbody');
+      tableBody.innerHTML = "";
+      let complaints = getComplaints().filter(c => c.roll === currentUser.roll);
+      complaints.forEach(c => {
+        let imgHtml = c.photo ? `<img src="${c.photo}" alt="photo">` : "";
+        tableBody.innerHTML += `<tr>
+            <td>${c.id}</td>
+            <td>${c.location}</td>
+            <td>${c.desc}</td>
+            <td class="status">${c.status}</td>
+            <td>${imgHtml}</td>
+          </tr>`;
+      });
+    }
+
+    // Admin login logic
+    let adminLoggedIn = false;
+    document.getElementById('adminLoginForm').onsubmit = function (e) {
+      e.preventDefault();
+      let msg = document.getElementById('adminLoginMsg');
+      const userid = document.getElementById('adminUserID').value.trim();
+      const pass = document.getElementById('adminPassword').value.trim();
+      if (userid === "admin" && pass === "123") {
+        adminLoggedIn = true;
+        msg.innerHTML = "";
+        renderAdminPanel();
+        show('adminPanel');
+        this.reset();
+      } else {
+        msg.innerHTML = "<div class='error'>Invalid admin credentials.</div>";
+      }
+    };
+    document.getElementById('adminLogoutBtn').onclick = () => {
+      adminLoggedIn = false;
+      show('homePage');
+    };
+
+    // Admin Panel Functions
+    function renderAdminPanel() {
+      if (!adminLoggedIn) return; // Prevent access if not logged in
+      let complaints = getComplaints();
+      let solved = complaints.filter(c => c.status === "problem solved");
+      let rejected = complaints.filter(c => c.status === "problem rejected");
+      let submitted = complaints.filter(c => c.status === "submitted");
+      let appointed = complaints.filter(c => c.status === "secretary appointed");
+      let summary = `
+        <div class="message">
+          <b>Total Complaints:</b> ${complaints.length} |
+          <b>Solved:</b> ${solved.length} |
+          <b>Rejected:</b> ${rejected.length} |
+          <b>Submitted:</b> ${submitted.length} |
+          <b>Secretary Appointed:</b> ${appointed.length}
+        </div>`;
+      document.getElementById('adminSummary').innerHTML = summary;
+
+      let tbody = document.querySelector('#adminComplaintsTable tbody');
+      tbody.innerHTML = "";
+      complaints.forEach((c, i) => {
+        let imgHtml = c.photo ? `<img src="${c.photo}" alt="photo">` : "";
+        let statusOpt = ["submitted", "secretary appointed", "problem solved", "problem rejected"]
+          .map(st => `<option${c.status === st ? " selected" : ""}>${st}</option>`).join('');
+        tbody.innerHTML += `<tr>
+          <td>${c.id}</td>
+          <td>${c.name}</td>
+          <td>${c.roll}</td>
+          <td>${c.location}</td>
+          <td>${c.desc}</td>
+          <td class="status">${c.status}</td>
+          <td>
+            <select data-index="${i}" class="setStatus">${statusOpt}</select>
+          </td>
+          <td>${imgHtml}</td>
+        </tr>`;
+      });
+      // Status update event
+      document.querySelectorAll('.setStatus').forEach(sel => {
+        sel.onchange = function () {
+          let idx = parseInt(this.getAttribute('data-index'));
+          let val = this.value;
+          complaints[idx].status = val;
+          complaints[idx].history.push({ status: val, date: new Date().toLocaleString() });
+          setComplaints(complaints);
+          renderAdminPanel();
+        };
+      });
+    }
+
+    // On page load, show home
+    show('homePage');
+  </script>
+</body>
+</html>
